@@ -6,20 +6,90 @@
              xmlns:local="clr-namespace:TwoEleven.views"
              xmlns:viewmodels="clr-namespace:TwoEleven.viewmodels"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="550" d:DesignWidth="450">
     <UserControl.DataContext>
         <viewmodels:HomeViewModel />
     </UserControl.DataContext>
 
-    <Grid>
+    <Grid Background="#16181c">
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">home 2^11</TextBlock>
-        <Button Grid.Row="2" Command="{Binding NavigateToGameCommand}">
-            start game
+        <TextBlock
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="48"
+            Foreground="#ecf9fb">
+            2<Run Typography.Variants="Superscript" FontWeight="Bold">11</Run>
+        </TextBlock>
+        <Button
+            Grid.Row="1"
+            Command="{Binding NavigateToGameCommand}"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Padding="12 8"
+            FontSize="16"
+            FontWeight="Medium"
+            BorderBrush="Transparent"
+            Foreground="Black"
+            Cursor="Hand">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="9" />
+                </Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#1bd96a" />
+                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1" ScaleY="1"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <ControlTemplate.Triggers>
+                                    <EventTrigger RoutedEvent="PreviewMouseDown">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                    To="0.95" Duration="0:0:0.05"/>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                    To="0.95" Duration="0:0:0.05"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="PreviewMouseUp">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                    To="1" Duration="0:0:0.05"/>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                    To="1" Duration="0:0:0.05"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </ControlTemplate.Triggers>
+                                <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#20ff7f" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Resources>
+            Start a game
         </Button>
     </Grid>
 </UserControl>
