@@ -7,6 +7,7 @@
         Source="views/HomeView.xaml"
         ShowsNavigationUI="False"
         mc:Ignorable="d"
+        Background="#16181c"
         Title="TwoEleven" Height="550" Width="450">
     <NavigationWindow.DataContext>
         <viewmodels:MainViewModel />
