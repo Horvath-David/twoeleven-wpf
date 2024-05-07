@@ -8,7 +8,8 @@
         ShowsNavigationUI="False"
         mc:Ignorable="d"
         Background="#16181c"
-        Title="TwoEleven" Height="550" Width="450">
+        Title="TwoEleven" Height="550" Width="450"
+        MinHeight="550" MinWidth="450">
     <NavigationWindow.DataContext>
         <viewmodels:MainViewModel />
     </NavigationWindow.DataContext>
