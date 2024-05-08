@@ -149,7 +149,7 @@
                             <DoubleAnimation
                                 Storyboard.Target="{Binding ElementName=Var_Animation_X, Path=Width}"
                                 Storyboard.TargetProperty="Width"
-                                Duration="0:0:0.1"
+                                Duration="0:0:0.13"
                                 From="0"
                                 To="1">
                             </DoubleAnimation>
@@ -158,7 +158,7 @@
                             <DoubleAnimation
                                 Storyboard.Target="{Binding ElementName=Var_Animation_Y, Path=Width}"
                                 Storyboard.TargetProperty="Width"
-                                Duration="0:0:0.1"
+                                Duration="0:0:0.13"
                                 From="0"
                                 To="1">
                             </DoubleAnimation>
@@ -169,10 +169,15 @@
                         CornerRadius="9">
                         <Border.Style>
                             <Style TargetType="Border">
-                                <Setter Property="Background" Value="Red" />
+                                <Setter Property="Background" >
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="{Binding BackgroundColor}" />
+                                    </Setter.Value>
+                                </Setter>
                                 <Setter Property="Width" Value="78" />
                                 <Setter Property="Height" Value="78" />
                                 <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                <Setter Property="Opacity" Value="1" />
                                 <Setter Property="RenderTransform">
                                     <Setter.Value>
                                         <TranslateTransform X="{Binding PhysicalX}" Y="{Binding PhysicalY}" />
@@ -220,6 +225,19 @@
                                             </Setter.Value>
                                         </Setter>
                                     </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsDeleted}" Value="True">
+                                        <Setter Property="Opacity" Value="0"></Setter>
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation
+                                                        Storyboard.Target="{Binding ElementName=MyTile, Path=Opacity}"
+                                                        Storyboard.TargetProperty="Opacity"
+                                                        Duration="0:0:0.13" From="1" To="0" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                    </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
@@ -229,7 +247,18 @@
                                 FontSize="32"
                                 FontWeight="Bold"
                                 HorizontalAlignment="Center"
-                                VerticalAlignment="Center" />
+                                VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" >
+                                            <Setter.Value>
+                                                <SolidColorBrush Color="{Binding ForegroundColor}" />
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="FontSize" Value="{Binding FontSize}" />
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
 
 
                             <Border x:Name="Var_Animation_X" Width="0">
@@ -269,8 +298,24 @@
                                                             <DoubleAnimation
                                                                 Storyboard.Target="{Binding ElementName=Var_Animation_Scale, Path=Width}"
                                                                 Storyboard.TargetProperty="Width"
-                                                                To="1" Duration="0:0:0.1"
+                                                                To="1" Duration="0:0:0.20"
                                                                 From="0" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsMerged}" Value="True">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimationUsingKeyFrames
+                                                                Storyboard.Target="{Binding ElementName=Var_Animation_Scale, Path=Width}"
+                                                                Storyboard.TargetProperty="Width"
+                                                                Duration="0:0:0.20">
+                                                                <LinearDoubleKeyFrame Value="0" KeyTime="0:0:0" />
+                                                                <LinearDoubleKeyFrame Value="1.15" KeyTime="0:0:0.15" />
+                                                                <LinearDoubleKeyFrame Value="1" KeyTime="0:0:0.20" />
+                                                            </DoubleAnimationUsingKeyFrames>
                                                         </Storyboard>
                                                     </BeginStoryboard>
                                                 </DataTrigger.EnterActions>
@@ -280,12 +325,6 @@
                                 </Border.Style>
                             </Border>
                         </Grid>
-
-                        <b:Interaction.Triggers>
-                            <b:DataTrigger Binding="{Binding IsDeleted}" Value="True">
-                                <b:ChangePropertyAction PropertyName="Opacity" Value="0" />
-                            </b:DataTrigger>
-                        </b:Interaction.Triggers>
 
                     </Border>
                 </DataTemplate>
