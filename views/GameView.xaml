@@ -13,11 +13,13 @@
 
     <Grid Background="#16181c">
         <Grid.RowDefinitions>
-            <RowDefinition Height="100px" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="25" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="25" />
         </Grid.RowDefinitions>
-        <TextBlock
-            Margin="0 25 0 0 "
+        <TextBlock Grid.Row="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             FontSize="48"
@@ -26,15 +28,14 @@
             <Run FontWeight="Bold" Text="{Binding Score}" />
         </TextBlock>
             
-        <Border Grid.Row="1"
-                Margin="25"
+        <Border Grid.Row="3"
                 Padding="12"
                 Background="#24262b"
                 BorderBrush="#33363d"
                 BorderThickness="1.2"
                 CornerRadius="9"
-                MaxWidth="400"
-                MaxHeight="400">
+                MaxWidth="375"
+                MaxHeight="375">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
