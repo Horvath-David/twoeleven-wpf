@@ -5,25 +5,32 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:TwoEleven.views"
              xmlns:viewmodels="clr-namespace:TwoEleven.viewmodels"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
              d:DesignHeight="550" d:DesignWidth="450">
     <UserControl.DataContext>
         <viewmodels:GameViewModel />
     </UserControl.DataContext>
-    
+
     <UserControl.InputBindings>
         <KeyBinding Key="W" Command="{Binding UpCommand}" />
         <KeyBinding Key="Up" Command="{Binding UpCommand}" />
-        
+
         <KeyBinding Key="A" Command="{Binding LeftCommand}" />
         <KeyBinding Key="Left" Command="{Binding LeftCommand}" />
-        
+
         <KeyBinding Key="S" Command="{Binding DownCommand}" />
         <KeyBinding Key="Down" Command="{Binding DownCommand}" />
-        
+
         <KeyBinding Key="D" Command="{Binding RightCommand}" />
         <KeyBinding Key="Right" Command="{Binding RightCommand}" />
     </UserControl.InputBindings>
+
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:InvokeCommandAction Command="{Binding SpawnCommand}" />
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
 
     <Grid Background="#16181c">
         <Grid.RowDefinitions>
@@ -34,14 +41,14 @@
             <RowDefinition Height="25" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            FontSize="48"
-            Foreground="#ecf9fb">
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="48"
+                   Foreground="#ecf9fb">
             <Run Text="Score:" />
             <Run FontWeight="Bold" Text="{Binding Score}" />
         </TextBlock>
-            
+
         <Border Grid.Row="3"
                 Padding="12"
                 Background="#24262b"
@@ -62,67 +69,102 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
-                    <RowDefinition  Height="12"/>
+                    <RowDefinition Height="12" />
                     <RowDefinition />
-                    <RowDefinition  Height="12"/>
+                    <RowDefinition Height="12" />
                     <RowDefinition />
-                    <RowDefinition  Height="12"/>
+                    <RowDefinition Height="12" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                
+
                 <Border Grid.Column="0" Grid.Row="0"
-                    Background="#33363d" 
-                    CornerRadius="9"/>
+                        Background="#33363d"
+                        CornerRadius="9" />
                 <Border Grid.Column="2" Grid.Row="0"
-                    Background="#33363d" 
-                    CornerRadius="9"/>
+                        Background="#33363d"
+                        CornerRadius="9" />
                 <Border Grid.Column="4" Grid.Row="0"
-                        Background="#33363d" 
-                        CornerRadius="9"/>
+                        Background="#33363d"
+                        CornerRadius="9" />
                 <Border Grid.Column="6" Grid.Row="0"
-                        Background="#33363d" 
-                        CornerRadius="9"/>
-                
+                        Background="#33363d"
+                        CornerRadius="9" />
+
                 <Border Grid.Column="0" Grid.Row="2"
-                        Background="#33363d" 
-                        CornerRadius="9"/>
+                        Background="#33363d"
+                        CornerRadius="9" />
                 <Border Grid.Column="2" Grid.Row="2"
-                        Background="#33363d" 
-                        CornerRadius="9"/>
+                        Background="#33363d"
+                        CornerRadius="9" />
                 <Border Grid.Column="4" Grid.Row="2"
-                        Background="#33363d" 
-                        CornerRadius="9"/>
+                        Background="#33363d"
+                        CornerRadius="9" />
                 <Border Grid.Column="6" Grid.Row="2"
-                        Background="#33363d" 
-                        CornerRadius="9"/>
-                
+                        Background="#33363d"
+                        CornerRadius="9" />
+
                 <Border Grid.Column="0" Grid.Row="4"
-                        Background="#33363d" 
-                        CornerRadius="9"/>
+                        Background="#33363d"
+                        CornerRadius="9" />
                 <Border Grid.Column="2" Grid.Row="4"
-                        Background="#33363d" 
-                        CornerRadius="9"/>
+                        Background="#33363d"
+                        CornerRadius="9" />
                 <Border Grid.Column="4" Grid.Row="4"
-                        Background="#33363d" 
-                        CornerRadius="9"/>
+                        Background="#33363d"
+                        CornerRadius="9" />
                 <Border Grid.Column="6" Grid.Row="4"
-                        Background="#33363d" 
-                        CornerRadius="9"/>
+                        Background="#33363d"
+                        CornerRadius="9" />
 
                 <Border Grid.Column="0" Grid.Row="6"
-                        Background="#33363d" 
-                        CornerRadius="9"/>
+                        Background="#33363d"
+                        CornerRadius="9" />
                 <Border Grid.Column="2" Grid.Row="6"
-                        Background="#33363d" 
-                        CornerRadius="9"/>
+                        Background="#33363d"
+                        CornerRadius="9" />
                 <Border Grid.Column="4" Grid.Row="6"
-                        Background="#33363d" 
-                        CornerRadius="9"/>
+                        Background="#33363d"
+                        CornerRadius="9" />
                 <Border Grid.Column="6" Grid.Row="6"
-                        Background="#33363d" 
-                        CornerRadius="9"/>
-                
+                        Background="#33363d"
+                        CornerRadius="9" />
+
             </Grid>
         </Border>
+
+
+        <ItemsControl Grid.Row="3"
+                      ItemsSource="{Binding Tiles}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas
+                        MaxWidth="375"
+                        MaxHeight="375" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:TileViewModel}">
+                    <Border
+                        Background="Aqua"
+                        CornerRadius="9"
+                        Width="78"
+                        Height="78">
+                        <TextBlock
+                            Text="{Binding Value}"
+                            FontSize="20"
+                            FontWeight="SemiBold"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding PhysicalX}" />
+                    <Setter Property="Canvas.Top" Value="{Binding PhysicalY}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+
+        </ItemsControl>
     </Grid>
 </UserControl>
