@@ -9,6 +9,10 @@
     <UserControl.DataContext>
         <viewmodels:HomeViewModel />
     </UserControl.DataContext>
+    
+    <UserControl.InputBindings>
+        <KeyBinding Key="Enter" Command="{Binding NavigateToGameCommand}" />
+    </UserControl.InputBindings>
 
     <Grid Background="#16181c">
         <Grid.RowDefinitions>

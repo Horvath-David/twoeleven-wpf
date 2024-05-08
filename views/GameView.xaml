@@ -10,6 +10,20 @@
     <UserControl.DataContext>
         <viewmodels:GameViewModel />
     </UserControl.DataContext>
+    
+    <UserControl.InputBindings>
+        <KeyBinding Key="W" Command="{Binding UpCommand}" />
+        <KeyBinding Key="Up" Command="{Binding UpCommand}" />
+        
+        <KeyBinding Key="A" Command="{Binding LeftCommand}" />
+        <KeyBinding Key="Left" Command="{Binding LeftCommand}" />
+        
+        <KeyBinding Key="S" Command="{Binding DownCommand}" />
+        <KeyBinding Key="Down" Command="{Binding DownCommand}" />
+        
+        <KeyBinding Key="D" Command="{Binding RightCommand}" />
+        <KeyBinding Key="Right" Command="{Binding RightCommand}" />
+    </UserControl.InputBindings>
 
     <Grid Background="#16181c">
         <Grid.RowDefinitions>
