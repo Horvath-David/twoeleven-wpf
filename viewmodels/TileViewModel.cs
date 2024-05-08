@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using TwoEleven.models;
 
 namespace TwoEleven.viewmodels;
@@ -27,14 +29,34 @@ public partial class TileViewModel(Tile tile) : ObservableObject {
     [ObservableProperty]
     private double _physicalY;
     [ObservableProperty]
+    private double _prevPhysicalX;
+    [ObservableProperty]
+    private double _prevPhysicalY;
+    [ObservableProperty]
     private bool _isSpawned;
+    [ObservableProperty]
+    private bool _isMoving;
     [ObservableProperty]
     private bool _isMerged;
     [ObservableProperty]
     private bool _isDeleted;
 
+    public ICommand RefreshInitials => new RelayCommand(() => {
+        var oldSpawned = IsSpawned;
+        IsSpawned = false;
+        IsSpawned = oldSpawned;
+    });
+    
+    public ICommand TestCommand => new RelayCommand(() => {
+        Console.WriteLine(IsSpawned);
+    });
+
     public void UpdatePhysicalPosition() { 
         PhysicalX = 14 + X * 90;
         PhysicalY = 14 + Y * 90;
+        
+        if (PrevPhysicalX != 0) return;
+        PrevPhysicalX = PhysicalX;
+        PrevPhysicalY = PhysicalY;
     }
 }

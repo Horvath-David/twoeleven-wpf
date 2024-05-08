@@ -26,11 +26,84 @@ public partial class GameViewModel : ObservableObject {
     public ICommand LeftCommand => new RelayCommand(() => ProcessMove(Direction.Left));
     public ICommand SpawnCommand => new RelayCommand(SpawnNew);
 
-    private int ProcessMove(Direction dir, bool dryRun = false) {
-        var mergeCount = 0;
+    private bool ProcessMove(Direction dir, bool dryRun = false) {
+        var didMerge = false;
 
-        SpawnNew();
-        return mergeCount;
+        var didMove = PushAll(dir, dryRun);
+        var didChange = didMove || didMerge;
+        if (didChange && !dryRun) SpawnNew();
+        return didChange;
+    }
+
+    private bool PushAll(Direction dir, bool dryRun = false) {
+        var didMove = false;
+
+        // Removing unneeded tiles
+        foreach (var tile in Tiles.ToList().Where(tile => tile.IsDeleted)) {
+            Tiles.Remove(tile);
+        }
+
+        var deltaX = dir switch {
+            Direction.Left => -1,
+            Direction.Right => 1,
+            _ => 0
+        };
+        var deltaY = dir switch {
+            Direction.Up => -1,
+            Direction.Down => 1,
+            _ => 0
+        };
+
+        var sorted = (dir switch {
+            Direction.Left => Tiles.OrderBy(t => t.X),
+            Direction.Right => Tiles.OrderBy(t => -t.X),
+            Direction.Up => Tiles.OrderBy(t => t.Y),
+            Direction.Down => Tiles.OrderBy(t => -t.Y),
+            _ => new List<TileViewModel>().Order()
+        }).ToList();
+        
+        // Preprocessing for animations
+        foreach (var tile in sorted) {
+            tile.PrevPhysicalX = tile.PhysicalX;
+            tile.PrevPhysicalY = tile.PhysicalY;
+            tile.IsMoving = false;
+        }
+        
+        // // Merging
+        // foreach (var tile in sorted) {
+        //     // Console.WriteLine($"Starting: {tile.X}, {tile.Y}");
+        //     // Console.WriteLine($"Deltas: {deltaX}, {deltaY}");
+        //     while (Tiles.FirstOrDefault(t => tile.X + deltaX == t.X && tile.Y + deltaY == t.Y) == null
+        //            && tile.X + deltaX < 4 && tile.X + deltaX >= 0 && tile.Y + deltaY < 4 && tile.Y + deltaY >= 0) {
+        //         didMove = true;
+        //         if (dryRun) break;
+        //         tile.X += deltaX;
+        //         tile.Y += deltaY;
+        //     }
+        //     // Console.WriteLine($"After: {tile.X}, {tile.Y}");
+        // }
+        // // Console.WriteLine("---------");
+
+        // Pushing
+        foreach (var tile in sorted) {
+            // Console.WriteLine($"Starting: {tile.X}, {tile.Y}");
+            // Console.WriteLine($"Deltas: {deltaX}, {deltaY}");
+            while (Tiles.FirstOrDefault(t => tile.X + deltaX == t.X && tile.Y + deltaY == t.Y) == null
+                   && tile.X + deltaX < 4 && tile.X + deltaX >= 0 && tile.Y + deltaY < 4 && tile.Y + deltaY >= 0) {
+                didMove = true;
+                if (dryRun) break;
+                tile.X += deltaX;
+                tile.Y += deltaY;
+            }
+            // Console.WriteLine($"After: {tile.X}, {tile.Y}");
+        }
+        // Console.WriteLine("---------");
+
+        foreach (var tile in Tiles) {
+            tile.UpdatePhysicalPosition();
+        }
+
+        return didMove;
     }
 
     private void SpawnNew() {
@@ -57,10 +130,5 @@ public partial class GameViewModel : ObservableObject {
         };
         newTile.UpdatePhysicalPosition();
         Tiles.Add(newTile);
-        
-        Console.WriteLine(Tiles.Last().PhysicalX);
-        Console.WriteLine(Tiles.Last().PhysicalY);
-
-        Console.WriteLine(Tiles.Count);
     }
 }
