@@ -6,6 +6,10 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UseWPF>true</UseWPF>
+        <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    </PropertyGroup>
+    <PropertyGroup>
+        <ProduceReferemceAssembly>False</ProduceReferemceAssembly>
     </PropertyGroup>
 
     <ItemGroup>
