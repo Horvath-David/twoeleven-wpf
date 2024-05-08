@@ -26,13 +26,6 @@ public partial class GameViewModel : ObservableObject {
     public ICommand LeftCommand => new RelayCommand(() => ProcessMove(Direction.Left));
     public ICommand SpawnCommand => new RelayCommand(SpawnNew);
 
-    public ICommand StopMovingCommand => new RelayCommand(() => {
-        Console.WriteLine("completed");
-        foreach (var tile in Tiles) {
-            tile.IsMoving = false;
-        }
-    });
-
     private bool ProcessMove(Direction dir, bool dryRun = false) {
         var didMerge = false;
 

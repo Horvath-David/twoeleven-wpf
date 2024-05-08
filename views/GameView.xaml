@@ -3,12 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:TwoEleven.views"
              xmlns:viewmodels="clr-namespace:TwoEleven.viewmodels"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:models="clr-namespace:TwoEleven.models"
-             xmlns:system="clr-namespace:System;assembly=System.Runtime"
-             xmlns:math="http://hexinnovation.com/math"
              mc:Ignorable="d"
              d:DesignHeight="550" d:DesignWidth="450">
     <UserControl.DataContext>
@@ -155,8 +151,7 @@
                                 Storyboard.TargetProperty="Width"
                                 Duration="0:0:0.1"
                                 From="0"
-                                To="1"
-                                Completed="Timeline_OnCompleted">
+                                To="1">
                             </DoubleAnimation>
                         </Storyboard>
                         <Storyboard x:Key="StoryboardY">
@@ -165,8 +160,7 @@
                                 Storyboard.TargetProperty="Width"
                                 Duration="0:0:0.1"
                                 From="0"
-                                To="1"
-                                Completed="Timeline_OnCompleted">
+                                To="1">
                             </DoubleAnimation>
                         </Storyboard>
                     </DataTemplate.Resources>
@@ -186,7 +180,16 @@
                                 </Setter>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsSpawned}" Value="True">
-                                        <Setter Property="Background" Value="Aqua"></Setter>
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <TransformGroup>
+                                                    <ScaleTransform
+                                                        ScaleX="{Binding ElementName=Var_Animation_Scale, Path=Width}"
+                                                        ScaleY="{Binding ElementName=Var_Animation_Scale, Path=Width}" />
+                                                    <TranslateTransform X="{Binding PhysicalX}" Y="{Binding PhysicalY}" />
+                                                </TransformGroup>
+                                            </Setter.Value>
+                                        </Setter>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsMoving}" Value="True">
                                         <Setter Property="RenderTransform">
@@ -255,7 +258,7 @@
                                     </Style>
                                 </Border.Style>
                             </Border>
-                            <Border x:Name="Var_Animation_Scale" Width="0.1">
+                            <Border x:Name="Var_Animation_Scale" Width="0">
                                 <Border.Style>
                                     <Style TargetType="Border">
                                         <Style.Triggers>
@@ -266,8 +269,8 @@
                                                             <DoubleAnimation
                                                                 Storyboard.Target="{Binding ElementName=Var_Animation_Scale, Path=Width}"
                                                                 Storyboard.TargetProperty="Width"
-                                                                To="1" Duration="0:0:0.1" 
-                                                                From="0.1"/>
+                                                                To="1" Duration="0:0:0.1"
+                                                                From="0" />
                                                         </Storyboard>
                                                     </BeginStoryboard>
                                                 </DataTrigger.EnterActions>

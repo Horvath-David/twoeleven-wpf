@@ -9,11 +9,4 @@ public partial class GameView : UserControl {
         Focusable = true;
         Loaded += (_, _) => Focus();
     }
-
-    private void Timeline_OnCompleted(object? sender, EventArgs e) {
-        
-        Console.WriteLine("timeline completed event");
-        var vm = DataContext as GameViewModel;
-        vm?.StopMovingCommand.Execute(null);
-    }
 }
