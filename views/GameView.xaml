@@ -6,6 +6,9 @@
              xmlns:local="clr-namespace:TwoEleven.views"
              xmlns:viewmodels="clr-namespace:TwoEleven.viewmodels"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:models="clr-namespace:TwoEleven.models"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:math="http://hexinnovation.com/math"
              mc:Ignorable="d"
              d:DesignHeight="550" d:DesignWidth="450">
     <UserControl.DataContext>
@@ -146,56 +149,147 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type viewmodels:TileViewModel}">
                     <DataTemplate.Resources>
-                        <Style TargetType="Border" x:Key="TileStyle">
-                            <Setter Property="Background" Value="Red" />
-                            <Setter Property="Width" Value="78" />
-                            <Setter Property="Height" Value="78" />
-                            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
-                        </Style>
+                        <Storyboard x:Key="StoryboardX">
+                            <DoubleAnimation
+                                Storyboard.Target="{Binding ElementName=Var_Animation_X, Path=Width}"
+                                Storyboard.TargetProperty="Width"
+                                Duration="0:0:0.1"
+                                From="0"
+                                To="1"
+                                Completed="Timeline_OnCompleted">
+                            </DoubleAnimation>
+                        </Storyboard>
+                        <Storyboard x:Key="StoryboardY">
+                            <DoubleAnimation
+                                Storyboard.Target="{Binding ElementName=Var_Animation_Y, Path=Width}"
+                                Storyboard.TargetProperty="Width"
+                                Duration="0:0:0.1"
+                                From="0"
+                                To="1"
+                                Completed="Timeline_OnCompleted">
+                            </DoubleAnimation>
+                        </Storyboard>
                     </DataTemplate.Resources>
                     <Border
                         x:Name="MyTile"
-                        Style="{StaticResource TileStyle}"
                         CornerRadius="9">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="Red" />
+                                <Setter Property="Width" Value="78" />
+                                <Setter Property="Height" Value="78" />
+                                <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <TranslateTransform X="{Binding PhysicalX}" Y="{Binding PhysicalY}" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSpawned}" Value="True">
+                                        <Setter Property="Background" Value="Aqua"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsMoving}" Value="True">
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <TransformGroup>
+                                                    <ScaleTransform
+                                                        ScaleX="{Binding ElementName=Var_Animation_Scale, Path=Width}"
+                                                        ScaleY="{Binding ElementName=Var_Animation_Scale, Path=Width}" />
+                                                    <TranslateTransform>
+                                                        <TranslateTransform.X>
+                                                            <MultiBinding Converter="{StaticResource Math}"
+                                                                          ConverterParameter="[0] * ([2] - [1]) + [1]">
+                                                                <Binding ElementName="Var_Animation_X" Path="Width" />
+                                                                <Binding Path="PrevPhysicalX" />
+                                                                <Binding Path="PhysicalX" />
+                                                            </MultiBinding>
+                                                        </TranslateTransform.X>
+                                                        <TranslateTransform.Y>
+                                                            <MultiBinding Converter="{StaticResource Math}"
+                                                                          ConverterParameter="[0] * ([2] - [1]) + [1]">
+                                                                <Binding ElementName="Var_Animation_Y" Path="Width" />
+                                                                <Binding Path="PrevPhysicalY" />
+                                                                <Binding Path="PhysicalY" />
+                                                            </MultiBinding>
+                                                        </TranslateTransform.Y>
+                                                    </TranslateTransform>
+                                                </TransformGroup>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <Grid>
+                            <TextBlock
+                                Text="{Binding Value}"
+                                FontSize="32"
+                                FontWeight="Bold"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+
+
+                            <Border x:Name="Var_Animation_X" Width="0">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsMoving}" Value="True">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard Storyboard="{StaticResource StoryboardX}" />
+                                                </DataTrigger.EnterActions>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                            </Border>
+                            <Border x:Name="Var_Animation_Y" Width="0">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsMoving}" Value="True">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard Storyboard="{StaticResource StoryboardY}" />
+                                                </DataTrigger.EnterActions>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                            </Border>
+                            <Border x:Name="Var_Animation_Scale" Width="0.1">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSpawned}" Value="True">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation
+                                                                Storyboard.Target="{Binding ElementName=Var_Animation_Scale, Path=Width}"
+                                                                Storyboard.TargetProperty="Width"
+                                                                To="1" Duration="0:0:0.1" 
+                                                                From="0.1"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                            </Border>
+                        </Grid>
+
                         <b:Interaction.Triggers>
-                            <b:DataTrigger Binding="{Binding IsSpawned}" Value="True">
-                                <b:ChangePropertyAction PropertyName="RenderTransform">
-                                    <b:ChangePropertyAction.Value>
-                                        <ScaleTransform ScaleX="0.1" ScaleY="0.1" />
-                                    </b:ChangePropertyAction.Value>
-                                </b:ChangePropertyAction>
-                                <b:ControlStoryboardAction ControlStoryboardOption="Play">
-                                    <b:ControlStoryboardAction.Storyboard>
-                                        <Storyboard>
-                                            <DoubleAnimation
-                                                Storyboard.Target="{Binding ElementName=MyTile}"
-                                                Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
-                                                To="1" Duration="0:0:0.1" />
-                                            <DoubleAnimation
-                                                Storyboard.Target="{Binding ElementName=MyTile}"
-                                                Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
-                                                To="1" Duration="0:0:0.1" />
-                                        </Storyboard>
-                                    </b:ControlStoryboardAction.Storyboard>
-                                </b:ControlStoryboardAction>
-                            </b:DataTrigger>
                             <b:DataTrigger Binding="{Binding IsDeleted}" Value="True">
                                 <b:ChangePropertyAction PropertyName="Opacity" Value="0" />
                             </b:DataTrigger>
                         </b:Interaction.Triggers>
-                        <TextBlock
-                            Text="{Binding Value}"
-                            FontSize="32"
-                            FontWeight="Bold"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
+
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">
-                    <Setter Property="Canvas.Left" Value="{Binding PhysicalX}" />
-                    <Setter Property="Canvas.Top" Value="{Binding PhysicalY}" />
+
                 </Style>
             </ItemsControl.ItemContainerStyle>
 

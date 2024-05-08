@@ -50,6 +50,9 @@ public partial class TileViewModel(Tile tile) : ObservableObject {
     public ICommand TestCommand => new RelayCommand(() => {
         Console.WriteLine(IsSpawned);
     });
+    public ICommand StopMovingCommand => new RelayCommand(() => {
+        IsMoving = false;
+    });
 
     public void UpdatePhysicalPosition() { 
         PhysicalX = 14 + X * 90;

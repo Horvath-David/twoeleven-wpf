@@ -26,6 +26,13 @@ public partial class GameViewModel : ObservableObject {
     public ICommand LeftCommand => new RelayCommand(() => ProcessMove(Direction.Left));
     public ICommand SpawnCommand => new RelayCommand(SpawnNew);
 
+    public ICommand StopMovingCommand => new RelayCommand(() => {
+        Console.WriteLine("completed");
+        foreach (var tile in Tiles) {
+            tile.IsMoving = false;
+        }
+    });
+
     private bool ProcessMove(Direction dir, bool dryRun = false) {
         var didMerge = false;
 
@@ -64,9 +71,9 @@ public partial class GameViewModel : ObservableObject {
         
         // Preprocessing for animations
         foreach (var tile in sorted) {
+            tile.IsMoving = false;
             tile.PrevPhysicalX = tile.PhysicalX;
             tile.PrevPhysicalY = tile.PhysicalY;
-            tile.IsMoving = false;
         }
         
         // // Merging
@@ -99,8 +106,10 @@ public partial class GameViewModel : ObservableObject {
         }
         // Console.WriteLine("---------");
 
-        foreach (var tile in Tiles) {
+        // Postprocessing for animations
+        foreach (var tile in sorted) {
             tile.UpdatePhysicalPosition();
+            tile.IsMoving = true;
         }
 
         return didMove;
