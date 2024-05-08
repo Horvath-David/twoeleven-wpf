@@ -67,12 +67,14 @@ public partial class TileViewModel(Tile tile) : ObservableObject {
     };
     
     public Color ForegroundColor => Value switch {
-        <= 4 => Color.FromRgb(119, 110, 101),
+        <= 4 => Color.FromRgb(63, 57, 51),
         _ => Color.FromRgb(249, 246, 242)
     };
 
     public double FontSize => Value switch {
-        >= 1024 => 24,
-        _ => 32
+        > 100_000 => 18,
+        >= 1_000 => 24,
+        > 100 => 32,
+        _ => 38
     };
 }
