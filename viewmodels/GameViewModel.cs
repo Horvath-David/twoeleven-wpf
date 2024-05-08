@@ -16,6 +16,8 @@ public enum Direction {
 public partial class GameViewModel : ObservableObject {
     [ObservableProperty]
     private int _score;
+    [ObservableProperty]
+    private bool _gameOver;
 
     [ObservableProperty]
     private ObservableCollection<TileViewModel> _tiles = [];
@@ -32,9 +34,11 @@ public partial class GameViewModel : ObservableObject {
 
         // Removing unneeded tiles, flags
         foreach (var tile in Tiles.ToList().Where(tile => tile.IsDeleted)) {
+            if (dryRun) break;
             Tiles.Remove(tile);
         }
         foreach (var tile in Tiles.ToList().Where(tile => tile.IsMerged)) {
+            if (dryRun) break;
             tile.IsMerged = false;
         }
 
@@ -59,6 +63,7 @@ public partial class GameViewModel : ObservableObject {
 
         // Preprocessing for animations
         foreach (var tile in sorted) {
+            if (dryRun) break;
             tile.IsMoving = false;
             tile.PrevPhysicalX = tile.PhysicalX;
             tile.PrevPhysicalY = tile.PhysicalY;
@@ -128,8 +133,13 @@ public partial class GameViewModel : ObservableObject {
 
         // Postprocessing for animations
         foreach (var tile in sorted) {
+            if (dryRun) break;
             tile.UpdatePhysicalPosition();
             tile.IsMoving = true;
+        }
+
+        if (!dryRun) {
+            CheckGameOver();
         }
 
         var didChange = didMerge || didMove;
@@ -163,5 +173,15 @@ public partial class GameViewModel : ObservableObject {
         newTile.UpdatePhysicalPosition();
         Tiles.Add(newTile);
         // Console.WriteLine($"After: {Tiles.Count(t => !t.IsDeleted)}");
+    }
+
+    private void CheckGameOver() {
+        var didMove = false;
+        didMove = didMove || ProcessMove(Direction.Up, true);
+        didMove = didMove || ProcessMove(Direction.Right, true);
+        didMove = didMove || ProcessMove(Direction.Down, true);
+        didMove = didMove || ProcessMove(Direction.Left, true);
+        GameOver = !didMove;
+        Console.WriteLine(GameOver);
     }
 }

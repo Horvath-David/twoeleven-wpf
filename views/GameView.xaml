@@ -169,7 +169,7 @@
                         CornerRadius="9">
                         <Border.Style>
                             <Style TargetType="Border">
-                                <Setter Property="Background" >
+                                <Setter Property="Background">
                                     <Setter.Value>
                                         <SolidColorBrush Color="{Binding BackgroundColor}" />
                                     </Setter.Value>
@@ -249,7 +249,7 @@
                                 VerticalAlignment="Center">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
-                                        <Setter Property="Foreground" >
+                                        <Setter Property="Foreground">
                                             <Setter.Value>
                                                 <SolidColorBrush Color="{Binding ForegroundColor}" />
                                             </Setter.Value>
@@ -335,5 +335,43 @@
             </ItemsControl.ItemContainerStyle>
 
         </ItemsControl>
+        <Border
+            Grid.Row="3"
+            Padding="12"
+            Background="#ee24262b"
+            BorderBrush="#33363d"
+            BorderThickness="1.2"
+            CornerRadius="9"
+            MaxWidth="375"
+            MaxHeight="375">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Opacity" Value="0" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding GameOver}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation 
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:1"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <TextBlock
+                Foreground="#ecf9fb"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="48"
+                FontWeight="SemiBold">
+                Game over!
+            </TextBlock>
+        </Border>
     </Grid>
 </UserControl>
